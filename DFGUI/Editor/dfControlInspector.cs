@@ -1,4 +1,9 @@
 /* Copyright 2013-2014 Daikon Forge */
+
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
+#define PRE_UNITY_4_3
+#endif
+
 using UnityEngine;
 using UnityEditor;
 
@@ -3184,7 +3189,9 @@ public class dfControlInspector : Editor
 		if( controls == null || controls.Count == 0 )
 			return;
 
-#if UNITY_4_3
+#if PRE_UNITY_4_3
+		Undo.RegisterSceneUndo( undoMessage );
+#elif UNITY_4_3
 
 		// HACK: Workaround for broken Unity undo handling
 		var manager = controls[ 0 ].GetManager();
@@ -3198,10 +3205,13 @@ public class dfControlInspector : Editor
 		} );
 
 #else
-		Undo.RegisterSceneUndo( undoMessage );
+        controls.ForEach(c =>
+        {
+            Undo.RegisterFullObjectHierarchyUndo(c, undoMessage);
+        });
 #endif
 
-	}
+    }
 
 	#region Control alignment functions 
 

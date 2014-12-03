@@ -1,4 +1,9 @@
 ﻿/* Copyright 2013-2014 Daikon Forge */
+
+#if UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
+#define PRE_UNITY_4_3
+#endif
+
 using UnityEngine;
 using UnityEditor;
 
@@ -192,10 +197,11 @@ public class dfEditorUtil
 	}
 
 	public static void MarkUndo( Object target, string UndoMessage )
-	{
+    {
 
-#if UNITY_4_3
-		
+#if PRE_UNITY_4_3
+		Undo.RegisterSceneUndo( UndoMessage );
+#elif UNITY_4_3
 		// HACK: Workaround for broken Unity undo handling
 		var views = Object.FindObjectsOfType<dfGUIManager>();
 		for( int i = 0; i < views.Length; i++ )
@@ -206,12 +212,11 @@ public class dfEditorUtil
 		}
 
 		Undo.RegisterCompleteObjectUndo( target, UndoMessage );
-
 #else
-		Undo.RegisterSceneUndo( UndoMessage );
+        Undo.RegisterFullObjectHierarchyUndo(target, UndoMessage);
 #endif
 
-		EditorUtility.SetDirty( target );
+        EditorUtility.SetDirty( target );
 
 	}
 
