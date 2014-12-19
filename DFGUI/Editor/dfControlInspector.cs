@@ -1216,19 +1216,23 @@ public class dfControlInspector : Editor
 					var mult = evt.control ? 10 : evt.shift ? 5 : 1;
 					switch( evt.keyCode )
 					{
-						case KeyCode.LeftArrow:
+                        case KeyCode.LeftArrow:
+                            ensureUndoInfoSaved("Move control");
 							control.Position += Vector3.left * mult;
 							evt.Use();
 							break;
-						case KeyCode.RightArrow:
+                        case KeyCode.RightArrow:
+                            ensureUndoInfoSaved("Move control");
 							control.Position += Vector3.right * mult;
 							evt.Use();
 							break;
-						case KeyCode.UpArrow:
+                        case KeyCode.UpArrow:
+                            ensureUndoInfoSaved("Move control");
 							control.Position += Vector3.up * mult;
 							evt.Use();
 							break;
-						case KeyCode.DownArrow:
+                        case KeyCode.DownArrow:
+                            ensureUndoInfoSaved("Move control");
 							control.Position += Vector3.down * mult;
 							evt.Use();
 							break;
@@ -1264,7 +1268,11 @@ public class dfControlInspector : Editor
 					break;
 				}
 
-				if( Tools.current != Tool.Move )
+				if( Tools.current != Tool.Move
+#if ENABLE_4_6_FEATURES
+                    && Tools.current != Tool.Rect
+#endif
+                    )
 					return;
 
 				// No resize handle currently selected

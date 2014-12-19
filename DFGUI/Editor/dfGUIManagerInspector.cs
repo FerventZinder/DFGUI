@@ -595,7 +595,13 @@ public class dfGUIManagerInspector : Editor
 
 			}
 
-			if( Tools.current == Tool.Move && evt.button == 0 && showGuidesConfig )
+			if( 
+#if ENABLE_4_6_FEATURES
+                (Tools.current == Tool.Move || Tools.current == Tool.Rect)
+#else
+                Tools.current == Tool.Move
+#endif
+                && evt.button == 0 && showGuidesConfig )
 			{
 
 				if( createVerticalGuideRect.Contains( evt.mousePosition ) )
